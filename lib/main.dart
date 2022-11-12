@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vitals/dahboard.dart';
 import 'package:vitals/screen/home_screen.dart';
 
 void main() {
