@@ -1,25 +1,48 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'dart:async';
-
 import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:provider/provider.dart';
+import 'package:vitals/provider/bottom_provider.dart';
+import 'package:vitals/screen/share_screen.dart';
 import 'package:vitals/widget/color.dart';
 
 String formatDate(DateTime d) {
   return d.toString().substring(0, 19);
 }
 
-class HomeScreen extends StatefulWidget {
+List<Widget> displayScreen = [HomeWidget(), ShareScreen(), ShareScreen()];
+
+class HomeScreen extends StatelessWidget {
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<BottomProvider>(
+        create: (context) => BottomProvider(),
+        child: Scaffold(
+          body: Consumer<BottomProvider>(
+            builder: (context, value, child) {
+              return displayScreen[value.bottomNo];
+            },
+          ),
+          bottomNavigationBar: bottomNavigation(),
+        ));
+  }
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class HomeWidget extends StatefulWidget {
+  const HomeWidget({super.key});
+
+  @override
+  State<HomeWidget> createState() => _HomeWidgetState();
+}
+
+class _HomeWidgetState extends State<HomeWidget> {
   late Stream<StepCount> _stepCountStream;
   late Stream<PedestrianStatus> _pedestrianStatusStream;
   String _status = '?', _steps = '0';
@@ -28,6 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   @override
   void initState() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: [SystemUiOverlay.top]);
     super.initState();
     initPlatformState();
   }
@@ -36,7 +61,6 @@ class _HomeScreenState extends State<HomeScreen> {
     print(steps);
     return dataMap = {
       "Steps": steps,
-      "": 2000 - steps,
     };
   }
 
@@ -89,7 +113,6 @@ class _HomeScreenState extends State<HomeScreen> {
     String date = DateFormat.MMMMEEEEd().format(DateTime.now());
     return Scaffold(
         backgroundColor: mycolor['bgColor'],
-        bottomNavigationBar: bottomNavigation(),
         body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,22 +125,35 @@ class _HomeScreenState extends State<HomeScreen> {
                   date,
                   style: TextStyle(
                       backgroundColor: mycolor['bgColor'],
-                      fontSize: MediaQuery.of(context).size.height * 0.019,
+                      fontSize: MediaQuery.of(context).size.height * 0.016,
                       letterSpacing: 0.4),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.only(
                     left: MediaQuery.of(context).size.height * 0.01,
-                    top: MediaQuery.of(context).size.height * 0.02),
-                child: Text(
-                  "Summary",
-                  style: TextStyle(
-                    backgroundColor: mycolor['bgColor'],
-                    fontSize: MediaQuery.of(context).size.height * 0.032,
-                    letterSpacing: 0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                    top: MediaQuery.of(context).size.height * 0.002),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Summary",
+                      style: TextStyle(
+                        backgroundColor: mycolor['bgColor'],
+                        fontSize: MediaQuery.of(context).size.height * 0.032,
+                        letterSpacing: 0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Icon(
+                        Icons.account_circle,
+                        color: Colors.black,
+                        size: 40,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Padding(
@@ -151,17 +187,27 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: EdgeInsets.only(
                             top: MediaQuery.of(context).size.height * 0.02,
                             bottom: MediaQuery.of(context).size.height * 0.02),
-                        child: PieChart(
-                          dataMap: pieSteps(a),
-                          chartRadius: MediaQuery.of(context).size.width / 2.5,
-                          chartType: ChartType.ring,
-                          legendOptions:
-                              const LegendOptions(showLegends: false),
-                          chartValuesOptions: const ChartValuesOptions(
-                            showChartValuesInPercentage: true,
-                            showChartValuesOutside: true,
+                        child: GestureDetector(
+                          onTap: () {
+                            HapticFeedback.mediumImpact();
+                          },
+                          child: PieChart(
+                            dataMap: pieSteps(a),
+                            ringStrokeWidth: 27,
+                            chartRadius:
+                                MediaQuery.of(context).size.width / 2.5,
+                            chartType: ChartType.ring,
+                            totalValue: 1500,
+                            initialAngleInDegree: -90,
+                            legendOptions:
+                                const LegendOptions(showLegends: false),
+                            chartValuesOptions: const ChartValuesOptions(
+                              showChartValuesInPercentage: true,
+                              showChartValuesOutside: true,
+                            ),
+                            baseChartColor: Colors.black,
+                            colorList: [Color(0xffE7FE55), Colors.black],
                           ),
-                          colorList: [Color(0xffE7FE55), Colors.black],
                         ),
                       ),
                     ],
@@ -173,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     left: MediaQuery.of(context).size.height * 0.01,
                     top: MediaQuery.of(context).size.height * 0.02),
                 child: Text(
-                  "Trends",
+                  "Tips",
                   style: TextStyle(
                     backgroundColor: mycolor['bgColor'],
                     fontSize: MediaQuery.of(context).size.height * 0.022,
@@ -182,31 +228,153 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              Row(
-                children: [
-                  Trend(bgColor:mycolor['gradientColor']),
-                  Trend(bgColor: mycolor['textColor'],)
-                ],
-              )
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    Trend(
+                      bgColor: mycolor['gradientColor'],
+                      fontColor: Colors.black,
+                      icon: FaIcon(
+                        FontAwesomeIcons.prescriptionBottle,
+                        color: Colors.black,
+                        size: 45,
+                      ),
+                      detail: "Drink at least 2.7L of water per day",
+                    ),
+                    Trend(
+                      bgColor: mycolor['textColor'],
+                      fontColor: mycolor['thirdColor'],
+                      icon: FaIcon(
+                        FontAwesomeIcons.personWalking,
+                        color: mycolor['thirdColor'],
+                        size: 45,
+                      ),
+                      detail: "Walk at least 2000 steps per day",
+                    ),
+                    Trend(
+                      bgColor: mycolor['gradientColor'],
+                      fontColor: Colors.black,
+                      icon: FaIcon(
+                        FontAwesomeIcons.prescriptionBottle,
+                        color: Colors.black,
+                        size: 45,
+                      ),
+                      detail: "Drink at least 2.7L of water per day",
+                    ),
+                    Trend(
+                      bgColor: mycolor['textColor'],
+                      fontColor: mycolor['thirdColor'],
+                      icon: FaIcon(
+                        FontAwesomeIcons.personWalking,
+                        color: mycolor['thirdColor'],
+                        size: 45,
+                      ),
+                      detail: "Walk at least 2000 steps per day",
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.height * 0.01,
+                    top: MediaQuery.of(context).size.height * 0.03),
+                child: Text(
+                  "Recommendations",
+                  style: TextStyle(
+                    backgroundColor: mycolor['bgColor'],
+                    fontSize: MediaQuery.of(context).size.height * 0.022,
+                    letterSpacing: 0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ],
           ),
         ));
   }
 }
 
-class Trend extends StatelessWidget {
+class Trend extends StatefulWidget {
   Color? bgColor;
-  Trend({this.bgColor});
+  Color? fontColor;
+  Widget? icon;
+  String? detail;
+  Trend({this.bgColor, this.fontColor, this.icon, this.detail});
 
   @override
+  State<Trend> createState() => _TrendState();
+}
+
+class _TrendState extends State<Trend> {
+  int status = 0;
+  @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding:  EdgeInsets.only(left:MediaQuery.of(context).size.width*0.02,right:MediaQuery.of(context).size.width*0.07,top: MediaQuery.of(context).size.height*0.02),
-      child: Container(
-        color: bgColor,
-        height: 200,
-        width: 160,
-      ),
+    return Stack(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(
+              left: MediaQuery.of(context).size.width * 0.022,
+              right: MediaQuery.of(context).size.width * 0.045,
+              top: MediaQuery.of(context).size.height * 0.02),
+          child: Container(
+              height: 200,
+              width: 160,
+              decoration: BoxDecoration(
+                  color: widget.bgColor,
+                  borderRadius: BorderRadius.circular(10)),
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.width * 0.034,
+                  right: MediaQuery.of(context).size.width * 0.01,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    widget.icon!,
+                    //  SizedBox(height: 20,),
+                    Text(
+                      widget.detail!,
+                      style: TextStyle(color: widget.fontColor, fontSize: 15),
+                    ),
+                  ],
+                ),
+              )),
+        ),
+        status == 0
+            ? Positioned(
+                top: 190,
+                left: 140,
+                child: GestureDetector(
+                  onTap: () {
+                    Fluttertoast.showToast(
+                        backgroundColor: Colors.black,
+                        textColor: Colors.white,
+                        msg: "Saved");
+                    setState(() {
+                      status = 1;
+                    });
+                  },
+                  child: Icon(Icons.bookmark_border, color: widget.fontColor),
+                ),
+              )
+            : Positioned(
+                top: 190,
+                left: 140,
+                child: GestureDetector(
+                  onTap: () {
+                    Fluttertoast.showToast(
+                        backgroundColor: Colors.black,
+                        textColor: Colors.white,
+                        msg: "Unsaved");
+                    setState(() {
+                      status = 0;
+                    });
+                  },
+                  child: Icon(Icons.bookmark, color: widget.fontColor),
+                ),
+              )
+      ],
     );
   }
 }
@@ -220,56 +388,62 @@ class bottomNavigation extends StatefulWidget {
 class _bottomNavigationState extends State<bottomNavigation> {
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-        backgroundColor: mycolor['bgColor'],
-        onTap: (state) {
-          setState(() {
-            widget.index = state;
-          });
-        },
-        selectedFontSize: 0,
-        unselectedFontSize: 0,
-        currentIndex: widget.index,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-              color: Colors.black,
-              size: 30,
-            ),
-            activeIcon: CircleAvatar(
-              child:
-                  Icon(Icons.home, color: mycolor['gradientColor'], size: 30),
-              backgroundColor: mycolor['textColor'],
-              maxRadius: 25,
-            ),
-            label: "",
-            backgroundColor: Color(0xff8BDF85),
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.group, color: Colors.black, size: 30),
-              activeIcon: CircleAvatar(
-                child: Icon(Icons.group,
-                    color: mycolor['gradientColor'], size: 30),
-                backgroundColor: mycolor['textColor'],
-                maxRadius: 25,
+    return Consumer<BottomProvider>(
+      builder: ((context, value, child) {
+        final bno = Provider.of<BottomProvider>(context, listen: false);
+        return BottomNavigationBar(
+            backgroundColor: mycolor['bgColor'],
+            onTap: (state) {
+              setState(() {
+                bno.setBNo(state);
+                //  widget.index = state;
+              });
+            },
+            selectedFontSize: 0,
+            unselectedFontSize: 0,
+            currentIndex: value.bottomNo,
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.favorite,
+                  color: Colors.black,
+                  size: 30,
+                ),
+                activeIcon: CircleAvatar(
+                  child: Icon(Icons.favorite,
+                      color: mycolor['gradientColor'], size: 30),
+                  backgroundColor: mycolor['textColor'],
+                  maxRadius: 25,
+                ),
+                label: "",
+                backgroundColor: Color(0xff8BDF85),
               ),
-              label: "",
-              backgroundColor: Color(0xff8BDF85)),
-          // BottomNavigationBarItem(
-          //     icon: Icon(
-          //       Icons.account_circle,
-          //       color: Colors.black,
-          //       size: 35,
-          //     ),
-          //     activeIcon: CircleAvatar(
-          //       child:
-          //           Icon(Icons.account_circle, color: mycolor['gradientColor'], size: 35),
-          //       backgroundColor: mycolor['textColor'],
-          //       maxRadius: 25,
-          //     ),
-          //     label: "",
-          //     backgroundColor: Color(0xff8BDF85)),
-        ]);
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.group, color: Colors.black, size: 30),
+                  activeIcon: CircleAvatar(
+                    child: Icon(Icons.group,
+                        color: mycolor['gradientColor'], size: 30),
+                    backgroundColor: mycolor['textColor'],
+                    maxRadius: 25,
+                  ),
+                  label: "",
+                  backgroundColor: Color(0xff8BDF85)),
+              BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.settings,
+                    color: Colors.black,
+                    size: 35,
+                  ),
+                  activeIcon: CircleAvatar(
+                    child: Icon(Icons.settings,
+                        color: mycolor['gradientColor'], size: 35),
+                    backgroundColor: mycolor['textColor'],
+                    maxRadius: 25,
+                  ),
+                  label: "",
+                  backgroundColor: Color(0xff8BDF85)),
+            ]);
+      }),
+    );
   }
 }
