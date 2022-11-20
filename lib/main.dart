@@ -20,8 +20,8 @@ class MyApp extends StatelessWidget {
       //   primarySwatch: Colors.blue,
       // ),
       routes: {
-        '/' :(context) => HomeScreen(),
-        '/loginScreen' :((context) => LoginPage()) ,
+        '/' :(context) => LoginPage(),
+        '/homeScreen' :((context) => HomeScreen()) ,
         '/CD' :(context) => CD()
       },
       initialRoute: '/',

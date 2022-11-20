@@ -54,8 +54,7 @@ class ShareScreen extends StatelessWidget {
                                           backgroundColor: Colors.black,
                                           child: CircleAvatar(
                                               radius: 70,
-                                              backgroundImage: NetworkImage(
-                                                  "https://bsmedia.business-standard.com/_media/bs/img/misc/2022-05/26/full/yogi-adityanath-1653561569-18753100.jpg"),
+                                              backgroundImage: NetworkImage('https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Elon_Musk_Royal_Society_%28crop2%29.jpg/1200px-Elon_Musk_Royal_Society_%28crop2%29.jpg'),
                                               backgroundColor: Colors.white),
                                         ),
                                         const SizedBox(
@@ -76,7 +75,7 @@ class ShareScreen extends StatelessWidget {
                                           height: 10,
                                         ),
                                             Text(
-                                                "No recent changes",
+                                                "Steps - 600",
                                                 style:
                                                     TextStyle(color: Colors.grey, fontWeight: FontWeight.bold,)),
                                             SizedBox(

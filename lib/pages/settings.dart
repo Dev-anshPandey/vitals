@@ -48,36 +48,42 @@ class _SettingsPageState extends State<SettingsPage> {
               thickness: 2,
             ),
             SizedBox(
-              height: 20,
+              height: 0,
             ),
-            buildAccountOptionRow(context, "Health Checklist"),
-            buildAccountOptionRow(context, "Notifications"),
+            Abc(icon: Icons.favorite, text: "Heart",color:Colors.red),
+            Abc(icon: Icons.female, text: "Cycle Tracking",color:Colors.red),
+             Abc(icon: Icons.bed, text: "Sleep",color:Colors.blue),
+              Abc(icon: Icons.medical_services_outlined, text: "Medications",color:Colors.green),
+               Abc(icon: Icons.add, text: "Other Data",color:Colors.blue),
+               
+           // buildAccountOptionRow(context, "Health Checklist"),
+            //buildAccountOptionRow(context, "Notifications"),
 
             SizedBox(
               height: 60,
             ),
-            Row(
-              children: [
-                Text(
-                  "Privacy",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            Divider(
-              height: 15,
-              thickness: 2,
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            buildAccountOptionRow(context, "Apps"),
-            buildAccountOptionRow(context, "Research Studies"),
-            buildAccountOptionRow(context, "Devices"),
+            // Row(
+            //   children: [
+            //     Text(
+            //       "Privacy",
+            //       style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            //     ),
+            //   ],
+            // ),
+            // Divider(
+            //   height: 15,
+            //   thickness: 2,
+            // ),
+            // SizedBox(
+            //   height: 20,
+            // ),
+            // buildAccountOptionRow(context, "Apps"),
+            // buildAccountOptionRow(context, "Research Studies"),
+            // buildAccountOptionRow(context, "Devices"),
 
-            SizedBox(
-              height: 50,
-            ),
+            // SizedBox(
+            //   height: 50,
+            // ),
             // Center(
             //   child: ElevatedButton(
             //    // padding: EdgeInsets.symmetric(horizontal: 40),
@@ -102,7 +108,7 @@ class _SettingsPageState extends State<SettingsPage> {
         Text(
           title,
           style: TextStyle(
-              fontSize: 18,
+              fontSize: 22,
               fontWeight: FontWeight.w500,
               color: Colors.grey[600]),
         ),
@@ -129,7 +135,7 @@ class _SettingsPageState extends State<SettingsPage> {
             Text(
               title,
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight: FontWeight.w500,
                 color: mycolor['textColor'],
               ),
@@ -140,6 +146,45 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class Abc extends StatelessWidget {
+  String? text;
+  IconData? icon;
+  Color? color;
+  Abc({this.text, this.icon,this.color});
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding:  EdgeInsets.only(top:20.0,bottom: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Icon(icon,color: color,),
+              SizedBox(
+                width: 14,
+              ),
+              Text(
+                text!,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  color: mycolor['textColor'],
+                ),
+              ),
+            ],
+          ),
+          Icon(
+            Icons.arrow_forward_ios,
+            color: mycolor['textColor'],
+          ),
+          
+        ],
       ),
     );
   }

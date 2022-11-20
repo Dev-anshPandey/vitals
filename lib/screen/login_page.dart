@@ -25,10 +25,10 @@ class LoginPage extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.04,left:MediaQuery.of(context).size.width*0.05 ),
               child: Text(
-                          "Login",
+                          "Vital +",
                           style: TextStyle(
                             backgroundColor: mycolor['bgColor'],
-                            fontSize: MediaQuery.of(context).size.height * 0.035,
+                            fontSize: MediaQuery.of(context).size.height * 0.04,
                             letterSpacing: 0,
                             fontWeight: FontWeight.bold,
                           ),
@@ -64,7 +64,7 @@ class _LoginCardState extends State<LoginCard> {
     return Container(
       margin: EdgeInsets.only(left: 20, right: 20),
       width: double.infinity,
-      height: MediaQuery.of(context).size.height * 0.6,
+      height: MediaQuery.of(context).size.height * 0.65,
       decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: Colors.white, width: 3),
@@ -211,7 +211,26 @@ class _LoginCardState extends State<LoginCard> {
                     ),
                   ),
                 ],
-              ),],
+              ),
+              SizedBox(
+              height: MediaQuery.of(context).size.height * 0.05,
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/homeScreen');
+              },
+              child: Container(
+                  margin: EdgeInsets.only(right: 0,left:180),
+                  child: const Text(
+                    "Skip For Now",
+                    style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 18,
+                        //fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline),
+                  )),
+            )
+              ],
           ),
           
         ],
