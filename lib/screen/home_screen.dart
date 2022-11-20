@@ -9,6 +9,9 @@ import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:vitals/pages/edit_profile.dart';
+import 'package:vitals/pages/settings.dart';
 import 'package:vitals/provider/bottom_provider.dart';
 import 'package:vitals/screen/share_screen.dart';
 import 'package:vitals/widget/color.dart';
@@ -17,7 +20,16 @@ String formatDate(DateTime d) {
   return d.toString().substring(0, 19);
 }
 
-List<Widget> displayScreen = [HomeWidget(), ShareScreen(), ShareScreen()];
+List<Widget> displayScreen = [HomeWidget(), ShareScreen(), SettingsPage()];
+openUrl() async {
+  var url = Uri.parse("https://myherokuyoga.herokuapp.com/");
+   if (await canLaunchUrl(url)) {
+      await launchUrl(url,
+      mode: LaunchMode.inAppWebView, );
+    }  else {
+    throw 'Could not launch $url';
+  }
+}
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -280,7 +292,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                     left: MediaQuery.of(context).size.height * 0.01,
                     top: MediaQuery.of(context).size.height * 0.03),
                 child: Text(
-                  "Recommendations",
+                  "Exercise",
                   style: TextStyle(
                     backgroundColor: mycolor['bgColor'],
                     fontSize: MediaQuery.of(context).size.height * 0.022,
@@ -289,6 +301,49 @@ class _HomeWidgetState extends State<HomeWidget> {
                   ),
                 ),
               ),
+              Padding(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.02,
+                    left: MediaQuery.of(context).size.height * 0.008,
+                    right: MediaQuery.of(context).size.height * 0.02),
+                child: GestureDetector(
+                  onTap: openUrl,
+                  child: Card(
+                    color: mycolor['thirdColor'],
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Image(image: NetworkImage("https://www.kindpng.com/picc/m/62-628393_yoga-clipart-black-and-white-yoga-transparent-hd.png"),
+                        height: 70,
+                        width: 60,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height * 0.04,
+                              bottom: MediaQuery.of(context).size.height * 0.04,
+                              left: MediaQuery.of(context).size.height * 0.015,
+                              right: MediaQuery.of(context).size.height * 0.015),
+                          child: Text("Get personalized exercise",
+                              style: TextStyle(
+                                  color: mycolor['textColor'],
+                                  fontSize: MediaQuery.of(context).size.height *
+                                      0.02,
+                                       fontWeight: FontWeight.bold,
+                                  letterSpacing: 0)),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(right: 20.0),
+                          child: Icon(
+                            Icons.arrow_forward_ios,
+                            color: mycolor['textColor'],
+                            size: 15,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              )
             ],
           ),
         ));
@@ -335,7 +390,7 @@ class _TrendState extends State<Trend> {
                     //  SizedBox(height: 20,),
                     Text(
                       widget.detail!,
-                      style: TextStyle(color: widget.fontColor, fontSize: 15),
+                      style: TextStyle(color: widget.fontColor, fontWeight: FontWeight.bold, fontSize: 15),
                     ),
                   ],
                 ),

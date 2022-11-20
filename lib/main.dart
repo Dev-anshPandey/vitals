@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:vitals/screen/clinical_document.dart';
 import 'package:vitals/screen/home_screen.dart';
+import 'package:vitals/screen/login_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +19,12 @@ class MyApp extends StatelessWidget {
       // theme: ThemeData(
       //   primarySwatch: Colors.blue,
       // ),
-      home: HomeScreen(),
+      routes: {
+        '/' :(context) => HomeScreen(),
+        '/loginScreen' :((context) => LoginPage()) ,
+        '/CD' :(context) => CD()
+      },
+      initialRoute: '/',
     );
   }
 }

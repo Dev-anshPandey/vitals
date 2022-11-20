@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "93541010773",
+    "project_id": "vitals-b3bbd",
+    "storage_bucket": "vitals-b3bbd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:93541010773:android:121cdb090e62ea974eb3dc",
+        "android_client_info": {
+          "package_name": "com.example.vitals"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "93541010773-jrrn0qc0e59pn8vkhpqgu49cei9stn7s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_9NzOQ3GHAx08NcoN_BRnXTiSABcs2OE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "93541010773-jrrn0qc0e59pn8vkhpqgu49cei9stn7s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

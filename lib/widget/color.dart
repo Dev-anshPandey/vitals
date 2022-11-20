@@ -7,3 +7,11 @@ Map<String,Color> mycolor = {
    "textColor" : Colors.black,
    "thirdColor" : Colors.white
 };
+//#00BED8
+
+// Map<String,Color> mycolor = {
+//   "bgColor":Color(0xffF3F2E9),
+//    'gradientColor' :Color(0xffE7FE55),
+//    "textColor" : Colors.black,
+//    "thirdColor" : Colors.white
+// };
