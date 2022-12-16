@@ -14,6 +14,7 @@ import 'package:vitals/pages/edit_profile.dart';
 import 'package:vitals/pages/settings.dart';
 import 'package:vitals/provider/bottom_provider.dart';
 import 'package:vitals/screen/share_screen.dart';
+import 'package:vitals/screen/tips.dart';
 import 'package:vitals/widget/color.dart';
 
 String formatDate(DateTime d) {
@@ -84,9 +85,8 @@ class _HomeWidgetState extends State<HomeWidget> {
     setState(() {
       pieSteps(event.steps.toDouble());
       a = event.steps.toDouble();
-       b=43.72*(a/67.5);
+      b = 43.72 * (a / 67.5);
       _steps = event.steps.toString();
-     
     });
   }
 
@@ -189,12 +189,15 @@ class _HomeWidgetState extends State<HomeWidget> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(top:MediaQuery.of(context).size.height*0.025),
+                              padding: EdgeInsets.only(
+                                  top: MediaQuery.of(context).size.height *
+                                      0.025),
                               child: Text(
                                 "Steps :",
                                 style: TextStyle(
-                                    fontSize: MediaQuery.of(context).size.height *
-                                        0.02),
+                                    fontSize:
+                                        MediaQuery.of(context).size.height *
+                                            0.02),
                               ),
                             ),
                             Text(_steps,
@@ -204,13 +207,15 @@ class _HomeWidgetState extends State<HomeWidget> {
                                             0.035,
                                     fontWeight: FontWeight.bold)),
                             Padding(
-                              padding: EdgeInsets.only(top:MediaQuery.of(context).size.height*0.03),
+                              padding: EdgeInsets.only(
+                                  top: MediaQuery.of(context).size.height *
+                                      0.03),
                               child: Text(
                                 "Kcal :",
                                 style: TextStyle(
-                                    fontSize: MediaQuery.of(context).size.height *
-                                        0.02,
-                                        ),
+                                  fontSize:
+                                      MediaQuery.of(context).size.height * 0.02,
+                                ),
                               ),
                             ),
                             Text(b.toInt().toString(),
@@ -218,7 +223,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                                     fontSize:
                                         MediaQuery.of(context).size.height *
                                             0.035,
-                                            color: Colors.black,
+                                    color: Colors.black,
                                     fontWeight: FontWeight.bold))
                           ],
                         ),
@@ -335,10 +340,12 @@ class _HomeWidgetState extends State<HomeWidget> {
                 Padding(
                   padding: EdgeInsets.only(
                       top: MediaQuery.of(context).size.height * 0.02,
-                      left: MediaQuery.of(context).size.height * 0.008,
-                      right: MediaQuery.of(context).size.height * 0.02),
+                      left: MediaQuery.of(context).size.height * 0.01,
+                      right: MediaQuery.of(context).size.height * 0),
                   child: GestureDetector(
-                    onTap: openUrl,
+                    onTap: () {
+                      Navigator.pushNamed(context, '/form');
+                    },
                     child: Card(
                       color: mycolor['thirdColor'],
                       child: Container(
@@ -347,54 +354,47 @@ class _HomeWidgetState extends State<HomeWidget> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
-                              height: 10,
+                              height: 40,
                             ),
-                            Image(
-                              image: NetworkImage(
-                                  "https://www.kindpng.com/picc/m/62-628393_yoga-clipart-black-and-white-yoga-transparent-hd.png"),
-                              height: 90,
-                              width: 70,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("Sign Up",
+                                    style: TextStyle(
+                                        color: mycolor['textColor'],
+                                        fontSize:
+                                            MediaQuery.of(context).size.height *
+                                                0.033,
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 0)),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Icon(
+                                  Icons.login,
+                                  size: 22,
+                                ),
+                              ],
                             ),
                             Padding(
                               padding: EdgeInsets.only(
-                                  top:
-                                      MediaQuery.of(context).size.height * 0.02,
-                                  bottom:
-                                      MediaQuery.of(context).size.height * 0.01,
-                                  left: MediaQuery.of(context).size.height *
-                                      0.075,
+                                  top: MediaQuery.of(context).size.height *
+                                      0.037,
+                                  bottom: MediaQuery.of(context).size.height *
+                                      0.015,
+                                  left:
+                                      MediaQuery.of(context).size.height * 0.05,
                                   right: MediaQuery.of(context).size.height *
-                                      0.015),
-                              child: Row(
-                                children: [
-                                  Text("Get personalized exercise",
-                                      style: TextStyle(
-                                          color: mycolor['textColor'],
-                                          fontSize: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.02,
-                                          fontWeight: FontWeight.bold,
-                                          letterSpacing: 0)),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 20.0),
-                                    child: Icon(
-                                      Icons.arrow_forward_ios,
+                                      0.065),
+                              child: Text("To get personalized exercise",
+                                  style: TextStyle(
                                       color: mycolor['textColor'],
-                                      size: 15,
-                                    ),
-                                  )
-                                ],
-                              ),
+                                      fontSize:
+                                          MediaQuery.of(context).size.height *
+                                              0.02,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0)),
                             ),
-                            // Padding(
-                            //   padding: EdgeInsets.only(right: 20.0),
-                            //   child: Icon(
-                            //     Icons.arrow_forward_ios,
-                            //     color: mycolor['textColor'],
-                            //     size: 15,
-                            //   ),
-                            // )
                           ],
                         ),
                       ),
@@ -430,32 +430,45 @@ class _TrendState extends State<Trend> {
               left: MediaQuery.of(context).size.width * 0.022,
               right: MediaQuery.of(context).size.width * 0.045,
               top: MediaQuery.of(context).size.height * 0.02),
-          child: Container(
-              height: 200,
-              width: 160,
-              decoration: BoxDecoration(
-                  color: widget.bgColor,
-                  borderRadius: BorderRadius.circular(10)),
-              child: Padding(
-                padding: EdgeInsets.only(
-                  left: MediaQuery.of(context).size.width * 0.034,
-                  right: MediaQuery.of(context).size.width * 0.01,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    widget.icon!,
-                    //  SizedBox(height: 20,),
-                    Text(
-                      widget.detail!,
-                      style: TextStyle(
-                          color: widget.fontColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15),
-                    ),
-                  ],
-                ),
-              )),
+          child: GestureDetector(
+            onTap: () {
+              showModalBottomSheet(
+                  context: context,
+                  builder: ((context) {
+                    return SizedBox(
+                      height: MediaQuery.of(context).size.height ,
+                      child: Tips(),
+                    );
+                  }));
+            },
+            child: Container(
+                height: 200,
+                width: 160,
+                decoration: BoxDecoration(
+                    color: widget.bgColor,
+                    
+                    borderRadius: BorderRadius.circular(10)),
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.034,
+                    right: MediaQuery.of(context).size.width * 0.01,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      widget.icon!,
+                      //  SizedBox(height: 20,),
+                      Text(
+                        widget.detail!,
+                        style: TextStyle(
+                            color: widget.fontColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15),
+                      ),
+                    ],
+                  ),
+                )),
+          ),
         ),
         status == 0
             ? Positioned(

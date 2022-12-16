@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:vitals/screen/clinical_document.dart';
+import 'package:vitals/screen/form.dart';
 import 'package:vitals/screen/home_screen.dart';
 import 'package:vitals/screen/login_page.dart';
+import 'package:vitals/screen/tips.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,9 +22,11 @@ class MyApp extends StatelessWidget {
       //   primarySwatch: Colors.blue,
       // ),
       routes: {
-        '/' :(context) => LoginPage(),
+        '/' :(context) => HomeScreen(),
         '/homeScreen' :((context) => HomeScreen()) ,
-        '/CD' :(context) => CD()
+        '/CD' :(context) => CD(),
+        '/form' :(context) => Forms(),
+        '/tips':(context) => Tips()
       },
       initialRoute: '/',
     );

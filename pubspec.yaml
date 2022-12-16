@@ -39,6 +39,7 @@ dependencies:
   google_fonts: ^3.0.1
   image_picker: ^0.8.6
   intl: ^0.17.0
+  liquid_swipe: ^3.0.0
   nepali_utils: ^3.0.3
   pedometer: ^3.0.0
   percent_indicator: ^4.2.2
@@ -66,7 +67,7 @@ flutter:
   uses-material-design: true
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/ 
+    - assets/
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
