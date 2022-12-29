@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:vitals/widget/color.dart';
 
@@ -11,7 +12,6 @@ class LoginPage extends StatelessWidget {
   void initState() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top]);
-
   }
 
   @override
@@ -23,25 +23,27 @@ class LoginPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.04,left:MediaQuery.of(context).size.width*0.05 ),
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.04,
+                  left: MediaQuery.of(context).size.width * 0.05),
               child: Text(
-                          "Vital +",
-                          style: TextStyle(
-                            backgroundColor: mycolor['bgColor'],
-                            fontSize: MediaQuery.of(context).size.height * 0.04,
-                            letterSpacing: 0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                "Vital +",
+                style: TextStyle(
+                  backgroundColor: mycolor['bgColor'],
+                  fontSize: MediaQuery.of(context).size.height * 0.04,
+                  letterSpacing: 0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-                     Padding(
-                       padding:  EdgeInsets.only(top:MediaQuery.of(context).size.height*0.04),
-                       child: LoginCard(),
-                     )
+            Padding(
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.04),
+              child: LoginCard(),
+            )
           ],
         ),
       ),
-
     );
   }
 }
@@ -53,7 +55,8 @@ class LoginCard extends StatefulWidget {
 
 class _LoginCardState extends State<LoginCard> {
   bool isLoggedIn = false;
-  int ls = 1;
+  int ls = 0;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
 
   //late GoogleSignInAccount user;
 
@@ -108,11 +111,11 @@ class _LoginCardState extends State<LoginCard> {
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
                               ls == 1 ? Colors.black : Colors.white),
-                          shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                  side: BorderSide(color: Colors.white)))),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.white)))),
                     ),
                   ),
                   Container(
@@ -137,16 +140,16 @@ class _LoginCardState extends State<LoginCard> {
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
                               ls == 1 ? Colors.white : Colors.black),
-                          shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                  side: BorderSide(color: Colors.white)))),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.white)))),
                     ),
                   ),
                 ],
               ),
-       TextFieldToDisplay(ls),
+              TextFieldToDisplay(ls),
               const SizedBox(
                 height: 30,
               ),
@@ -179,22 +182,22 @@ class _LoginCardState extends State<LoginCard> {
                   Center(
                     child: GestureDetector(
                       onTap: () {
-                        // googleSignIn.signIn().then((value) {
-                        //   setState(() {
-                        //     if (value != Null) {
-                              
-                        //       user = value!;
-                        //       //  Provider.of<MyList>(context,listen:false).adding(tf);
-                        //      Provider.of<LoggedInUser>(context,listen: false).LoggedInUserDetail(link: Image.network(user.photoUrl.toString()) );
-                        //        //print(value);
-                        //       isLoggedIn = true;
-                        //     Navigator.pushNamed(context, 'homeScreen');
-                        //       Fire(value);
-                        //     }
-                        //   });
-                        // }).catchError((e) {
-                        //   print(e);
-                        // });
+                        googleSignIn.signIn().then((value) {
+                          // setState(() {
+                          //   if (value != Null) {
+
+                          //     user = value!;
+                          //     //  Provider.of<MyList>(context,listen:false).adding(tf);
+                          //    Provider.of<LoggedInUser>(context,listen: false).LoggedInUserDetail(link: Image.network(user.photoUrl.toString()) );
+                          //      //print(value);
+                          //     isLoggedIn = true;
+                          //   Navigator.pushNamed(context, 'homeScreen');
+                          //     Fire(value);
+                          //   }
+                          // });
+                        }).catchError((e) {
+                          print(e);
+                        });
                       },
                       child: Card(
                         shape: RoundedRectangleBorder(
@@ -213,31 +216,32 @@ class _LoginCardState extends State<LoginCard> {
                 ],
               ),
               SizedBox(
-              height: MediaQuery.of(context).size.height * 0.05,
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, '/homeScreen');
-              },
-              child: Container(
-                  margin: EdgeInsets.only(right: 0,left:180),
-                  child: const Text(
-                    "Skip For Now",
-                    style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 18,
-                        //fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.underline),
-                  )),
-            )
-              ],
+                height: MediaQuery.of(context).size.height * 0.05,
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/homeScreen');
+                },
+                child: Container(
+                    margin: EdgeInsets.only(right: 0, left: 180),
+                    child: const Text(
+                      "Skip For Now",
+                      style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 18,
+                          //fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline),
+                    )),
+              )
+            ],
           ),
-          
         ],
       ),
     );
   }
+  
 }
+
 class TextFieldToDisplay extends StatelessWidget {
   int ls;
   TextFieldToDisplay(this.ls);

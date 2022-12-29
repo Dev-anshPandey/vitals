@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -13,6 +14,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:vitals/pages/edit_profile.dart';
 import 'package:vitals/pages/settings.dart';
 import 'package:vitals/provider/bottom_provider.dart';
+import 'package:vitals/provider/user_provider.dart';
+import 'package:vitals/screen/form.dart';
 import 'package:vitals/screen/share_screen.dart';
 import 'package:vitals/screen/tips.dart';
 import 'package:vitals/widget/color.dart';
@@ -37,8 +40,12 @@ openUrl() async {
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<BottomProvider>(
-        create: (context) => BottomProvider(),
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider<BottomProvider>(
+            create: ((context) => BottomProvider()),
+          ),
+        ],
         child: Scaffold(
           body: Consumer<BottomProvider>(
             builder: (context, value, child) {
@@ -58,6 +65,20 @@ class HomeWidget extends StatefulWidget {
 }
 
 class _HomeWidgetState extends State<HomeWidget> {
+  var auth = FirebaseAuth.instance;
+  var loggedIn = false;
+  checkIfLogIn() async {
+    final user = Provider.of<UserProvider>(context, listen: false);
+     user.setUrl(auth.currentUser!.photoURL.toString());
+    auth.authStateChanges().listen((User? user) {   
+      if (user != null && mounted) {
+        setState(() {
+          loggedIn = true;
+        });
+      }
+    });
+  }
+
   late Stream<StepCount> _stepCountStream;
   late Stream<PedestrianStatus> _pedestrianStatusStream;
   String _status = '?', _steps = '0';
@@ -67,6 +88,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   @override
   @override
   void initState() {
+    checkIfLogIn();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top]);
     super.initState();
@@ -164,13 +186,23 @@ class _HomeWidgetState extends State<HomeWidget> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Icon(
-                          Icons.account_circle,
-                          color: Colors.black,
-                          size: 40,
-                        ),
+                      Consumer<UserProvider>(
+                        builder: (context, value, child) {
+                          return value.url == null
+                              ? const Padding(
+                                  padding: EdgeInsets.only(right: 8.0),
+                                  child: Icon(
+                                    Icons.account_circle,
+                                    color: Colors.black,
+                                    size: 40,
+                                  ),
+                                )
+                              : Padding(
+                                  padding: EdgeInsets.only(right: 8.0),
+                                  child: CircleAvatar(
+                                    backgroundImage: NetworkImage(value.url!),
+                                  ));
+                        },
                       ),
                     ],
                   ),
@@ -435,8 +467,8 @@ class _TrendState extends State<Trend> {
               showModalBottomSheet(
                   context: context,
                   builder: ((context) {
-                    return SizedBox(
-                      height: MediaQuery.of(context).size.height ,
+                    return FractionallySizedBox(
+                      heightFactor: 1,
                       child: Tips(),
                     );
                   }));
@@ -446,7 +478,6 @@ class _TrendState extends State<Trend> {
                 width: 160,
                 decoration: BoxDecoration(
                     color: widget.bgColor,
-                    
                     borderRadius: BorderRadius.circular(10)),
                 child: Padding(
                   padding: EdgeInsets.only(

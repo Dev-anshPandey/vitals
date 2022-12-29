@@ -1,4 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
+import 'package:vitals/provider/user_provider.dart';
 import 'package:vitals/widget/color.dart';
 
 class Forms extends StatefulWidget {
@@ -154,8 +158,7 @@ class _FormDState extends State<FormD> {
                 padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.03,
                     left: MediaQuery.of(context).size.width * 0.06,
-                    bottom: MediaQuery.of(context).size.height * 0.01
-                    ),
+                    bottom: MediaQuery.of(context).size.height * 0.01),
                 child: Row(
                   children: [
                     Text("Gender : ",
@@ -289,143 +292,131 @@ class FormL extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
+  Future<void> Fire(value) async {
+    final GoogleSignInAuthentication? googleAuth = await value?.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
   @override
   State<FormL> createState() => _FormLState();
 }
 
-int ls = 0;
+int ls = 1;
+GoogleSignIn googleSignIn = GoogleSignIn();
 
 class _FormLState extends State<FormL> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top:20.0),
-      child: Card(
-        child: Container(
-          margin: EdgeInsets.only(left: 0, right: 0, ),
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height * 0.60,
-          color: Colors.white,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+    return Consumer<UserProvider>(
+      builder: (context, value, child) {
+        final user = Provider.of<UserProvider>(context, listen: false);
+        return Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: Card(
+            child: Container(
+              margin: EdgeInsets.only(
+                left: 0,
+                right: 0,
+              ),
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height * 0.60,
+              color: Colors.white,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 35, left: 32, right: 0),
-                        height: MediaQuery.of(context).size.height * 0.055,
-                        width: MediaQuery.of(context).size.height * 0.155,
-                        child: TextButton(
-                          onPressed: () {
-                            setState(() {
-                              ls = 1;
-                            });
-                          },
-                          child: ls == 1
-                              ? const Text(
-                                  "Log In",
-                                  style: TextStyle(color: Colors.white),
-                                )
-                              : const Text(
-                                  "Log In",
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  ls == 1 ? Colors.black : Colors.white),
-                              shape:
-                                  MaterialStateProperty.all<RoundedRectangleBorder>(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin:
+                                EdgeInsets.only(top: 35, left: 32, right: 0),
+                            height: MediaQuery.of(context).size.height * 0.055,
+                            width: MediaQuery.of(context).size.height * 0.155,
+                            child: TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  ls = 1;
+                                });
+                              },
+                              child: ls == 1
+                                  ? const Text(
+                                      "Log In",
+                                      style: TextStyle(color: Colors.white),
+                                    )
+                                  : const Text(
+                                      "Log In",
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      ls == 1 ? Colors.black : Colors.white),
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
                                       RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(18.0),
-                                          side: BorderSide(color: Colors.white)))),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(top: 35, left: 0, right: 35),
-                        height: MediaQuery.of(context).size.height * 0.055,
-                        width: MediaQuery.of(context).size.height * 0.15,
-                        child: TextButton(
-                          onPressed: () {
-                            setState(() {
-                              ls = 0;
-                            });
-                          },
-                          child: ls == 1
-                              ? const Text(
-                                  "Sign Up",
-                                  style: TextStyle(color: Colors.black),
-                                )
-                              : const Text(
-                                  "Sign Up",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  ls == 1 ? Colors.white : Colors.black),
-                              shape:
-                                  MaterialStateProperty.all<RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(18.0),
-                                          side: BorderSide(color: Colors.white)))),
-                        ),
-                      ),
-                    ],
-                  ),
-                  TextFieldToDisplay(ls),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  const Center(
-                      child: Text(
-                    "OR",
-                    style: TextStyle(color: Colors.grey),
-                  )),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(60),
-                        ),
-                        elevation: 2,
-                        child: const CircleAvatar(
-                          maxRadius: 21,
-                          backgroundImage: NetworkImage(
-                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRifhBwWgV_xNLjFzJFkzg1XExdYGqAwxHKEw&usqp=CAU",
+                                          borderRadius:
+                                              BorderRadius.circular(18.0),
+                                          side: BorderSide(
+                                              color: Colors.white)))),
+                            ),
                           ),
-                        ),
+                          Container(
+                            margin:
+                                EdgeInsets.only(top: 35, left: 0, right: 35),
+                            height: MediaQuery.of(context).size.height * 0.055,
+                            width: MediaQuery.of(context).size.height * 0.15,
+                            child: TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  ls = 0;
+                                });
+                              },
+                              child: ls == 1
+                                  ? const Text(
+                                      "Sign Up",
+                                      style: TextStyle(color: Colors.black),
+                                    )
+                                  : const Text(
+                                      "Sign Up",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      ls == 1 ? Colors.white : Colors.black),
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(18.0),
+                                          side: BorderSide(
+                                              color: Colors.white)))),
+                            ),
+                          ),
+                        ],
                       ),
+                      TextFieldToDisplay(ls),
                       const SizedBox(
-                        width: 20,
+                        height: 30,
                       ),
-                      Center(
-                        child: GestureDetector(
-                          onTap: () {
-                            // googleSignIn.signIn().then((value) {
-                            //   setState(() {
-                            //     if (value != Null) {
-      
-                            //       user = value!;
-                            //       //  Provider.of<MyList>(context,listen:false).adding(tf);
-                            //      Provider.of<LoggedInUser>(context,listen: false).LoggedInUserDetail(link: Image.network(user.photoUrl.toString()) );
-                            //        //print(value);
-                            //       isLoggedIn = true;
-                            //     Navigator.pushNamed(context, 'homeScreen');
-                            //       Fire(value);
-                            //     }
-                            //   });
-                            // }).catchError((e) {
-                            //   print(e);
-                            // });
-                          },
-                          child: Card(
+                      const Center(
+                          child: Text(
+                        "OR",
+                        style: TextStyle(color: Colors.grey),
+                      )),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Card(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(60),
                             ),
@@ -433,38 +424,49 @@ class _FormLState extends State<FormL> {
                             child: const CircleAvatar(
                               maxRadius: 21,
                               backgroundImage: NetworkImage(
-                                "https://pbs.twimg.com/profile_images/1455185376876826625/s1AjSxph_400x400.jpg",
+                                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRifhBwWgV_xNLjFzJFkzg1XExdYGqAwxHKEw&usqp=CAU",
                               ),
                             ),
                           ),
-                        ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          Center(
+                            child: GestureDetector(
+                              onTap: () {
+                                googleSignIn.signIn().then((value) {
+                                  widget.Fire(value);
+                                  user.setUrl(value!.photoUrl.toString());
+                                  Navigator.pushNamed(context, '/homeScreen');
+                                })
+                                .catchError((e) {
+                                  print(e);
+                                });
+                              },
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(60),
+                                ),
+                                elevation: 2,
+                                child: const CircleAvatar(
+                                  maxRadius: 21,
+                                  backgroundImage: NetworkImage(
+                                    "https://pbs.twimg.com/profile_images/1455185376876826625/s1AjSxph_400x400.jpg",
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  // SizedBox(
-                  //   height: MediaQuery.of(context).size.height * 0.05,
-                  // ),
-                  // GestureDetector(
-                  //   onTap: () {
-                  //     Navigator.pushNamed(context, '/homeScreen');
-                  //   },
-                  //   child: Container(
-                  //       margin: EdgeInsets.only(right: 0, left: 180),
-                  //       child: const Text(
-                  //         "Skip For Now",
-                  //         style: TextStyle(
-                  //             color: Colors.blue,
-                  //             fontSize: 18,
-                  //             //fontWeight: FontWeight.bold,
-                  //             decoration: TextDecoration.underline),
-                  //       )),
-                  // )
                 ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "93541010773-e8nfiovng13v7sqdhe29fbq2t2mod0kr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.vitals",
+            "certificate_hash": "817a411b3ba66147236de8f510e02dbb662d97d9"
+          }
+        },
+        {
           "client_id": "93541010773-jrrn0qc0e59pn8vkhpqgu49cei9stn7s.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +37,13 @@
             {
               "client_id": "93541010773-jrrn0qc0e59pn8vkhpqgu49cei9stn7s.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "93541010773-ce1bpegn1sludtalj33h8kt3v9cpv94b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.vitals"
+              }
             }
           ]
         }
